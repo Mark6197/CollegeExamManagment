@@ -1,71 +1,262 @@
-﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-for details on configuring this project to bundle and minify static web assets. */
-
-a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
-}
-
-/* Provide sufficient contrast against white background */
-a {
-  color: #0366d6;
-}
-
-.btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
-}
-
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
-}
-
-/* Sticky footer styles
--------------------------------------------------- */
-html {
-  font-size: 14px;
-}
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.border-top {
-  border-top: 1px solid #e5e5e5;
-}
-.border-bottom {
-  border-bottom: 1px solid #e5e5e5;
-}
-
-.box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
-}
-
-button.accept-policy {
-  font-size: 1rem;
-  line-height: inherit;
-}
-
-/* Sticky footer styles
--------------------------------------------------- */
-html {
-  position: relative;
-  min-height: 100%;
-}
+﻿/*
+    Global Style
+*/
+@import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
 
 body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
+    font-family: 'Poppins', sans-serif;
+    background: #fafafa; /*<body>background color is Grey*/
 }
-.footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  line-height: 60px; /* Vertically center the text there */
+
+p {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.1em; /*1.1 times the size of the font*/
+    font-weight: 300; /*Set the thickness of the font*/
+    line-height: 1.7em; /*1.7 times the size of a line height*/
+    color: #999; /*<p> text color is Dark Grey*/
+}
+
+/*Selects all <a> and all <a> when hovering or focusing on them*/
+a, a:hover, a:focus {
+    color: inherit; /*inherit means that the <a> element inherits it's color from the parent*/
+    text-decoration: none; /*Removes the under line of the <a>*/
+    transition: all 0.3s; /*Changing the color of <a> smoothly while hovering or focusing on it during 0.3s*/
+}
+
+/*Styling the upper <nav>*/
+.navbar {
+    padding: 15px 10px;
+    background: #fff; /*white*/
+    border: none;
+    border-radius: 0; /*Square*/
+    margin-bottom: 40px;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1); /*Add shadow to the <nav> */
+}
+
+/*Styling the <button> that is closing and opening the sidebar*/
+.navbar-btn {
+    box-shadow: none;
+    outline: none !important; /*removing the <button> outlines | !important overiddes*/
+    border: none; /*removing the <button> border*/
+}
+
+/*Styling the <div>'s that are in the demi-data might want to change*/
+.line {
+    width: 100%;
+    height: 1px;
+    border-bottom: 1px dashed #ddd;
+    margin: 40px 0;
+}
+
+/* ---------------------------------------------------
+    SIDEBAR STYLE
+----------------------------------------------------- */
+
+/*Styling the <div> with .wrapper class to be flex*/
+.wrapper {
+    display: flex;
+    width: 100%;
+}
+
+/*Styling the <nav> with #sidebar id*/
+#sidebar {
+    width: 250px;
+    position: fixed; /*positioned relative to the browser window*/
+    top: 0; /*set to top*/
+    left: 0; /*set to left*/
+    height: 100vh; /*Relative to 100% of the height of the browser window size*/
+    z-index: 999; /*Set the stack order to 999- need to be large number so it will always be in front*/
+    background: #7386D5; /*light puprple color of the sidebar*/
+    color: #fff; /*white*/
+    transition: all 0.3s; /*set the duration of all the effect to 0.3s*/
+}
+
+    /*Styling the <nav> with #sidebar id and .active class (this class will be applied on large screens when the sidebar closed and on small when its open)*/
+    #sidebar.active {
+        margin-left: -250px; /*when the element has an active class he disappears and noves all its width outside of the browser*/
+        /*transform: rotateY(100deg);*/
+    }
+
+    /*Styling the <div> with .sidebar-header that is inside the sidebar <nav>*/
+    #sidebar .sidebar-header {
+        padding: 20px;
+        background: #6d7fcc; /*A darker purple that the sidebar's*/
+    }
+
+    /*Styling the <ul> with .components that is inside the sidebar <nav>*/
+    #sidebar ul.components {
+        padding: 20px 0;
+        border-bottom: 1px solid #47748b; /*the line that we can see in the sidebar below the links*/
+    }
+
+    /*Styling the <p> inside the <li> inside the <ul> inside the sidebar <nav>*/
+    #sidebar ul li p {
+        color: #fff;
+        padding: 10px;
+    }
+
+    /*Styling the <a> inside the <li> inside the <ul> inside the sidebar <nav>*/
+    #sidebar ul li a {
+        padding: 10px;
+        font-size: 1.1em;
+        display: block; /*Like a row*/
+    }
+
+        /*hovering above the <a> inside the <li> inside the <ul> inside the sidebar <nav>*/
+        #sidebar ul li a:hover {
+            color: #7386D5; /*light puprple color of the sidebar that the text is changed into while hovering*/
+            background: #fff;
+        }
+
+    /*Styling <a> that is a son of <li> that has .active class inside a <ul> inside the sidebar <nav> and all <a> with attribue: aria-expanded="true"
+        that means it's styling the li in the sidebar that is expened as dropdown*/
+    #sidebar ul li.active > a, a[aria-expanded="true"] {
+        color: #fff;
+        background: #6d7fcc; /*A darker purple that the sidebar's*/
+    }
+
+/*Styling <a> that has attribue: data-toggle="collapse"*/
+a[data-toggle="collapse"] {
+    position: relative; /*the position is relative to the default posiotion of the element itself*/
+}
+
+/*Together with the upper style we use this to style the triangles that are on the dropdowns so that they will be on the right side*/
+.dropdown-toggle::after {
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+}
+
+/*Make the arrow change to up and down*/
+a[aria-expanded="true"].dropdown-toggle::after {
+    border-top: 0;
+    border-right: .3em solid transparent;
+    border-bottom: .3em solid;
+    border-left: .3em solid transparent;
+}
+
+/*Styling all the <a> inside <ul> inside <ul> overriding the size and padding so this will look like list inside of bigger list (dropdown inside sidebar)*/
+ul ul a {
+    font-size: 0.9em !important;
+    padding-left: 30px !important;
+    background: #6d7fcc;
+}
+
+/* ---------------------------------------------------
+    CONTENT STYLE
+----------------------------------------------------- */
+/*Styling the <div> with #content id*/
+#content {
+    width: calc(100% - 250px); /*by defult the width is the window width minus the sidebar width*/
+    padding: 40px;
+    min-height: 100vh; /*making it's minmum to all screen at least so that we will be able to scroll down*/
+    transition: all 0.3s;
+    position: absolute; /*positioned relative to the nearest positioned ancestor*/
+    top: 0; /*positioned to the top*/
+    right: 0; /*positioned to the right*/
+}
+
+    /*Styling the <div> with #content id when it has .active class*/
+    #content.active {
+        width: 100%; /*changing the width to be all window*/
+    }
+
+/*Styling the Hamburger Button*/
+#sidebarCollapse {
+    width: 40px;
+    height: 40px;
+    background: #f5f5f5; /*white smoke color*/
+    cursor: pointer;
+}
+
+    /*Styling the 3 Hamburger lines (<span>)*/
+    #sidebarCollapse span {
+        width: 80%;
+        height: 2px;
+        margin: 0 auto;
+        display: block;
+        background: #555; /*Dark color*/
+        transition: all 0.8s cubic-bezier(0.810, -0.330, 0.345, 1.375); /*The cubic-bezier transition-timing-function that defines a Cubic Bezier curve*/
+        transition-delay: 0.1s; /*Set a delay till the start of the affect*/
+    }
+
+        /*Styiling the first <span> inside #sidebarCollapse*/
+        #sidebarCollapse span:first-of-type {
+            transform: rotate(45deg) translate(2px, 2px); /*making it rotate in order to create X
+                rotating it by 45 deg from the right side to the button and moving it position 2px to the right ,and 2px down relative to its current position*/
+        }
+
+        /*Styiling the second <span> inside #sidebarCollapse*/
+        #sidebarCollapse span:nth-of-type(2) {
+            opacity: 0; /*making it dissapear*/
+        }
+
+        /*Styiling the last <span> inside #sidebarCollapse*/
+        #sidebarCollapse span:last-of-type {
+            transform: rotate(-45deg) translate(1px, -1px); /*making it rotate in order to create X
+                rotating it by 45 deg from the right side to the top and moving it position 1px to the right ,and 1px up relative to its current position*/
+        }
+
+    /*Styling all 3 Hamburger lines (<span>) when the <button> has .active style*/
+    #sidebarCollapse.active span {
+        transform: none;
+        opacity: 1;
+        margin: 5px auto;
+    }
+
+
+/* ---------------------------------------------------
+    MEDIAQUERIES
+----------------------------------------------------- */
+/*happens only in devices where the width is less than or equal to 768px 
+(better practice- to change it to min and design mobile first in order to make the site run faster on mobiles)*/
+@media (max-width: 768px) {
+    /*on small devices I would like to close the sidebar by deafult*/
+    #sidebar {
+        margin-left: -250px;
+        /*transform: rotateY(90deg);*/
+    }
+
+        /*Styling the <nav> with #sidebar id and .active class (this class will be applied on large screens when the sidebar closed and on small when its open)*/
+        #sidebar.active {
+            margin-left: 0;
+            transform: none;
+        }
+
+    /*on small devices I would like the <div> with #content id to be as the size of the browser*/
+    #content {
+        width: 100%;
+    }
+
+        /*on small devices the <div> with #content has .active class it will smaller*/
+        #content.active {
+            width: calc(100% - 250px);
+        }
+
+    /*on small devices the Hamburger <button> will be X by deafult*/
+    #sidebarCollapse span:first-of-type,
+    #sidebarCollapse span:nth-of-type(2),
+    #sidebarCollapse span:last-of-type {
+        transform: none;
+        opacity: 1;
+        margin: 5px auto;
+    }
+
+    #sidebarCollapse.active span {
+        margin: 0 auto;
+    }
+
+        #sidebarCollapse.active span:first-of-type {
+            transform: rotate(45deg) translate(2px, 2px);
+        }
+
+        #sidebarCollapse.active span:nth-of-type(2) {
+            opacity: 0;
+        }
+
+        #sidebarCollapse.active span:last-of-type {
+            transform: rotate(-45deg) translate(1px, -1px);
+        }
 }
