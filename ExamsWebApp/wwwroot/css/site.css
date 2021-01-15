@@ -23,6 +23,8 @@ a, a:hover, a:focus {
     transition: all 0.3s; /*Changing the color of <a> smoothly while hovering or focusing on it during 0.3s*/
 }
 
+
+
 /*Styling the upper <nav>*/
 .navbar {
     padding: 15px 10px;
@@ -102,39 +104,49 @@ a, a:hover, a:focus {
         display: block; /*Like a row*/
     }
 
-        /*hovering above the <a> inside the <li> inside the <ul> inside the sidebar <nav>*/
-        #sidebar ul li a:hover {
-            color: #7386D5; /*light puprple color of the sidebar that the text is changed into while hovering*/
-            background: #fff;
+        #sidebar ul li a.expended-link {
+            display: inline-block;
+            width: 83%;
         }
 
-    /*Styling <a> that is a son of <li> that has .active class inside a <ul> inside the sidebar <nav> and all <a> with attribue: aria-expanded="true"
-        that means it's styling the li in the sidebar that is expened as dropdown*/
-    #sidebar ul li.active > a, a[aria-expanded="true"] {
-        color: #fff;
-        background: #6d7fcc; /*A darker purple that the sidebar's*/
-    }
+        #sidebar ul li a.dropdown-toggle {
+            display: inline-block;
+            float: right;
+            background-color: #6d7fcc;
+            margin-right: 10px;
+            margin-top: 10px;
+            padding: 2px 7px 0px 7px;
+        }
 
-/*Styling <a> that has attribue: data-toggle="collapse"*/
-a[data-toggle="collapse"] {
-    position: relative; /*the position is relative to the default posiotion of the element itself*/
-}
-
-/*Together with the upper style we use this to style the triangles that are on the dropdowns so that they will be on the right side*/
 .dropdown-toggle::after {
-    display: block;
-    position: absolute;
-    top: 50%;
-    right: 20px;
-    transform: translateY(-50%);
+    display: inline-block;
+    margin-left: .255em;
+    vertical-align: .255em;
+    content: "";
+    border-top: .3em solid;
+    border-right: .3em solid transparent;
+    border-bottom: 0;
+    border-left: .3em solid transparent;
 }
 
-/*Make the arrow change to up and down*/
 a[aria-expanded="true"].dropdown-toggle::after {
     border-top: 0;
     border-right: .3em solid transparent;
     border-bottom: .3em solid;
     border-left: .3em solid transparent;
+}
+
+/*hovering above the <a> inside the <li> inside the <ul> inside the sidebar <nav>*/
+#sidebar ul li a:hover {
+    color: #7386D5; /*light puprple color of the sidebar that the text is changed into while hovering*/
+    background: #fff;
+}
+
+/*Styling <a> that is a son of <li> that has .active class inside a <ul> inside the sidebar <nav> and all <a> with attribue: aria-expanded="true"
+        that means it's styling the li in the sidebar that is expened as dropdown*/
+#sidebar ul li.active > a, a[aria-expanded="true"] {
+    color: #fff;
+    background: #6d7fcc; /*A darker purple that the sidebar's*/
 }
 
 /*Styling all the <a> inside <ul> inside <ul> overriding the size and padding so this will look like list inside of bigger list (dropdown inside sidebar)*/
@@ -259,4 +271,12 @@ ul ul a {
         #sidebarCollapse.active span:last-of-type {
             transform: rotate(-45deg) translate(1px, -1px);
         }
+}
+/* ---------------------------------------------------
+    Cards container (used by students card)
+----------------------------------------------------- */
+
+.card-container{
+    display:flex;
+    flex-wrap:wrap;
 }

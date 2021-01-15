@@ -51,21 +51,21 @@ namespace ExamsWebApp.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "9359f715-2060-428c-af12-a811ccf13218",
+                            ConcurrencyStamp = "033ca3da-4b89-40a8-a460-ced0ad241e4e",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 2L,
-                            ConcurrencyStamp = "de3a0dc1-af51-41a0-9ccb-f1197c0d1e1a",
+                            ConcurrencyStamp = "d4cba868-c2f6-4036-a9e9-e127db4d0a5c",
                             Name = "Teacher",
                             NormalizedName = "TEACHER"
                         },
                         new
                         {
                             Id = 3L,
-                            ConcurrencyStamp = "3ac17ca3-507a-4264-9a9d-bb90267ead87",
+                            ConcurrencyStamp = "a4ad8d51-8de0-4ee1-93ef-7868305ec514",
                             Name = "Student",
                             NormalizedName = "STUDENT"
                         });
@@ -93,10 +93,10 @@ namespace ExamsWebApp.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(25)");
 
                     b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(25)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");

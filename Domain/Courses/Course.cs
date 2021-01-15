@@ -1,4 +1,5 @@
 ﻿using Domain.Common;
+using Domain.Exams;
 using Domain.Users.Students;
 using Domain.Users.Teachers;
 using System;
@@ -11,28 +12,18 @@ namespace Domain.Courses
 {
     public class Course : Entity
     {
-
-        [Required]
-        [StringLength(50)]
         public string Name { get; set; }
-        [Required]
-        [StringLength(1000)]
         public string Description { get; set; }
-
-        [Required]
-        [Column(TypeName = "Date")]
-        [DataType(DataType.Date)]
         public DateTime StartDate { get; set; }
-
-        [Required]
-        [Column(TypeName = "Date")]
-        [DataType(DataType.Date)]
         public DateTime FinishDate { get; set; }
+        public ICollection<Student> Students { get; set; }
+        public ICollection<Exam> Exams { get; set; }
+        public long TeacherId { get; set; }
+        public Teacher Teacher { get; set; }
 
-        public virtual IReadOnlyCollection<StudentsCourses> StudentsCourses { get; set; }
-
-        //public virtual ICollection<Exam> Exams { get; set; }
-        public int TeacherId { get; set; }
-        public virtual Teacher Teacher { get; set; }
+        public Course()
+        {
+            Students = new List<Student>();
+        }
     }
 }

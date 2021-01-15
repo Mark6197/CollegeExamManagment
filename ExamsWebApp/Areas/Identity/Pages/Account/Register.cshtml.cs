@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
@@ -14,28 +13,31 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using Domain.Users.Teachers;
+using Domain.Users.Students;
+using Domain.Interfaces.Persistence;
 
 namespace ExamsWebApp.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class RegisterModel : PageModel
     {
+        private readonly IUnitOfWork _unitOfWork;
         private readonly SignInManager<AppUser> _signInManager;
-        private readonly RoleManager<AppRole> _roleManager;
         private readonly UserManager<AppUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
 
         public RegisterModel(
+            IUnitOfWork unitOfWork,
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
-            RoleManager<AppRole> roleManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender)
         {
+            _unitOfWork = unitOfWork;
             _userManager = userManager;
             _signInManager = signInManager;
-            _roleManager = roleManager;
             _logger = logger;
             _emailSender = emailSender;
         }
@@ -102,7 +104,17 @@ namespace ExamsWebApp.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
-                    await _userManager.AddToRoleAsync(user, Input.Role);//Might want to capture the result amd check if it succeded also maybe move this to another place
+                    await _userManager.AddToRoleAsync(user, Input.Role);//Might want to capture the result and check if it succeded also maybe move this to another place
+
+                    if (Input.Role.ToUpper()=="TEACHER")
+                    {
+                        await _unitOfWork.Teachers.AddAsync(new Teacher(user.Id, user.FirstName+" "+user.LastName));
+                    }
+                    else if (Input.Role.ToUpper() == "STUDENT")
+                    {
+                        await _unitOfWork.Students.AddAsync(new Student(user.Id, user.FirstName + " " + user.LastName));
+                    }
+                    await _unitOfWork.SaveAsync();
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));

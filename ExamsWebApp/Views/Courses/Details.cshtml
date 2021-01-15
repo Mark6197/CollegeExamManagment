@@ -1,0 +1,50 @@
+﻿@model ExamsWebApp.Models.CourseViewModels.CourseExtendedDetailsViewModel;
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_TeacherLayout.cshtml";
+}
+
+<h1>@Model.Details.Name</h1>
+
+<div>
+    <h4>Course</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3 col-lg-2">
+            @Html.DisplayNameFor(model => model.Details.Description)
+        </dt>
+        <dd class="col-sm-9 col-lg-10">
+            @Html.DisplayFor(model => model.Details.Description)
+        </dd>
+        <dt class="col-sm-3 col-lg-2">
+            @Html.DisplayNameFor(model => model.Details.StartDate)
+        </dt>
+        <dd class="col-sm-9 col-lg-10">
+            @Html.DisplayFor(model => model.Details.StartDate)
+        </dd>
+        <dt class="col-sm-3 col-lg-2">
+            @Html.DisplayNameFor(model => model.Details.FinishDate)
+        </dt>
+        <dd class="col-sm-9 col-lg-10">
+            @Html.DisplayFor(model => model.Details.FinishDate)
+        </dd>
+    </dl>
+
+    <div class="card-container">
+        @foreach (var student in Model.Students)
+        {
+            <div class="card m-3" style="width:200px">
+                <img class="card-img-top" src="~/images/defaultuserimage.jpg" alt="@student.FullName image" style="width:100%" asp-append-version="true">
+                <div class="card-body">
+                    <h6 class="card-title">@student.FullName</h6>
+                    <a href="#" class="btn btn-primary">Details</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Details.Id">Edit</a> |
+    <a asp-action="List">Back to all courses</a>
+</div>

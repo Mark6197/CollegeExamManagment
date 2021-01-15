@@ -11,10 +11,10 @@ namespace ExamsWebApp.Areas.Identity.Data
     public class AppUser : IdentityUser<long>
     {
         [PersonalData]
-        [Column(TypeName = "nvarchar(100)")]
+        [Column(TypeName = "nvarchar(25)")]
         public string FirstName { get; set; }
         [PersonalData]
-        [Column(TypeName = "nvarchar(100)")]
+        [Column(TypeName = "nvarchar(25)")]
         public string LastName { get; set; }
     }
 }

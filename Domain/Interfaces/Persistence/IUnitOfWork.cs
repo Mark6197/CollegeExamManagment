@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Domain.Interfaces.Persistence
 {
@@ -9,6 +10,6 @@ namespace Domain.Interfaces.Persistence
         ICourseRepository Courses { get; }
         IStudentRepository Students { get; }
         ITeacherRepository Teachers { get; }
-        int Save();
+        Task<int> SaveAsync();
     }
 }
