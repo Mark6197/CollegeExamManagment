@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Domain.Courses;
 using ExamsWebApp.Models.CourseViewModels;
-
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ExamsWebApp.Mappers
 {

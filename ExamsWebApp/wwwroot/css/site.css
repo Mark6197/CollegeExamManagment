@@ -175,6 +175,7 @@ ul ul a {
         width: 100%; /*changing the width to be all window*/
     }
 
+
 /*Styling the Hamburger Button*/
 #sidebarCollapse {
     width: 40px;
@@ -247,6 +248,11 @@ ul ul a {
             width: calc(100% - 250px);
         }
 
+            /*If not applied there will be a bug that the hamburger buttom isn't visible on small devices when the sidebar is open*/
+            #content.active .container-fluid {
+                display: block;
+            }
+
     /*on small devices the Hamburger <button> will be X by deafult*/
     #sidebarCollapse span:first-of-type,
     #sidebarCollapse span:nth-of-type(2),
@@ -276,7 +282,24 @@ ul ul a {
     Cards container (used by students card)
 ----------------------------------------------------- */
 
-.card-container{
-    display:flex;
-    flex-wrap:wrap;
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/*---------------------------------------------------
+    Question box and its inner elements (used in creating exam) 
+
+----------------------------------------------------*/
+
+.question-box {
+    border: 2px solid grey;
+    border-radius: 25px;
+    padding: 10px;
+}
+
+.question-points {
+    width: 85px;
+    display: inline-block;
+    margin-left: 2px
 }

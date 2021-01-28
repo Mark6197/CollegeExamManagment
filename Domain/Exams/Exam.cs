@@ -22,9 +22,13 @@ namespace Domain.Exams
 
         public DateTime FinishDate { get; set; }
 
-        [DataType(DataType.Time)]
-        public TimeSpan Duration { get; set; }
+        public TimeSpan? Duration { get; set; }
 
         public bool AutoPointsCalculation { get; set; }
+
+        public Exam()
+        {
+            Questions = new List<Question>();
+        }
     }
 }

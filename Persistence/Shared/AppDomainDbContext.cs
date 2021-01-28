@@ -28,6 +28,8 @@ namespace Persistence.Shared
             new TeacherConfiguration().Configure(modelBuilder.Entity<Teacher>());
             new CourseConfiguration().Configure(modelBuilder.Entity<Course>());
             new ExamConfiguration().Configure(modelBuilder.Entity<Exam>());
+            new QuestionConfiguration().Configure(modelBuilder.Entity<Question>());
+            new AnswerConfiguration().Configure(modelBuilder.Entity<Answer>());
             new StudentExamConfiguration().Configure(modelBuilder.Entity<StudentExam>());
             new StudentQuestionConfiguration().Configure(modelBuilder.Entity<StudentQuestion>());
         }

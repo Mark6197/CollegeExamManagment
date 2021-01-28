@@ -1,0 +1,19 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "uuid@8.3.2",
+      "destination": "wwwroot/lib/uuid/",
+      "files": [
+        "uuid.min.js",
+        "uuidNIL.min.js",
+        "uuidParse.min.js",
+        "uuidStringify.min.js",
+        "uuidv4.min.js",
+        "uuidValidate.min.js",
+        "uuidVersion.min.js"
+      ]
+    }
+  ]
+}

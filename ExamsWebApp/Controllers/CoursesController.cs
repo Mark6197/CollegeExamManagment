@@ -19,13 +19,11 @@ namespace ExamsWebApp.Controllers
 {
     public class CoursesController : Controller
     {
-        private readonly UserManager<AppUser> _userManager;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public CoursesController(UserManager<AppUser> userManager, IUnitOfWork unitOfWork, IMapper mapper)
+        public CoursesController( IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _userManager = userManager;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
@@ -76,13 +74,14 @@ namespace ExamsWebApp.Controllers
         public async Task<IActionResult> Create(CreateCourseViewModel createCourseViewModel)
         {
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
+                return View();
+            }
                 Course course = _mapper.Map<Course>(createCourseViewModel);
                 course.TeacherId = User.GetLoggedInUserId<long>();
                 await _unitOfWork.Courses.AddAsync(course);
                 await _unitOfWork.SaveAsync();
-            }
 
             return RedirectToAction(nameof(List));
         }

@@ -10,6 +10,7 @@ namespace Domain.Interfaces.Persistence
         ICourseRepository Courses { get; }
         IStudentRepository Students { get; }
         ITeacherRepository Teachers { get; }
+        IExamRepository Exams { get; }
         Task<int> SaveAsync();
     }
 }

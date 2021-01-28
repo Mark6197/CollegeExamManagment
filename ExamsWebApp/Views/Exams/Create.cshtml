@@ -1,0 +1,303 @@
+﻿@model ExamsWebApp.Models.ExamViewModels.CreateExamViewModel
+
+@{
+    ViewData["Title"] = "Create Exam";
+    Layout = "~/Views/Shared/_TeacherLayout.cshtml";
+}
+
+<h1>Create Exam</h1>
+
+<hr />
+<div class="row">
+    <div class="col-sm-12">
+        <form id="createExamForm" onsubmit="postExam(event)">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group row">
+                <div class="form-group col-md-5">
+                    <label asp-for="Title"></label>
+                    <input id="title" asp-for="Title" class="form-control" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-5">
+                    <label asp-for="CourseId"></label>
+                    <select asp-for="CourseId" class="form-control" asp-items="ViewBag.Courses"></select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="form-group col-md-5 col-lg-4">
+                    <label asp-for="StartDate"></label>
+                    <input id="startDate" asp-for="StartDate" class="form-control" />
+                    <span asp-validation-for="StartDate" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-5 col-lg-4">
+                    <label asp-for="FinishDate"></label>
+                    <input id="finishDate" asp-for="FinishDate" class="form-control" />
+                    <span asp-validation-for="FinishDate" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-row align-items-center">
+                <div class="col-md-auto">
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input id="timeLimit" class="form-check-input" asp-for="TimeLimit" onchange="timeLimitChanged()" /> @Html.DisplayNameFor(model => model.TimeLimit)
+                        </label>
+                    </div>
+                </div>
+
+                <div class="col-md-3 ml-3">
+                    <input id="duration" asp-for="Duration" class="form-control d-none" />
+                    <span asp-validation-for="Duration" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-row mt-3 ">
+                <div class="col-md-auto">
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input id="autoPointsCalculation" class="form-check-input" asp-for="AutoPointsCalculation" checked onchange="autoCalcChanged()" /> @Html.DisplayNameFor(model => model.AutoPointsCalculation)
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <h2 class="col-auto mr-auto">Questions</h2>
+                <div class="col-auto mt-2">
+                    <label>Questions count: </label>
+                    <label id="questionsCount">0</label>
+                </div>
+            </div>
+                <input style="display:none" type="text" name="Questions" value="" />
+                <span class="text-danger field-validation-valid" data-valmsg-for="Questions" data-valmsg-replace="true"></span>
+            <hr />
+
+            <div class="col-md-12" id="questions-list" name="Questions">
+
+            </div>
+            <div>
+                <a style="cursor:pointer" onclick="addQuestion(event)">
+                    <i class="fas fa-plus-circle fa-lg"></i>
+                    <span>New Question</span>
+                </a>
+            </div>
+
+            <div class="form-group mt-2">
+                <input type="submit" value="Post" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    <script type="module" src="~/lib/uuid/uuidv4.min.js"></script>
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type="text/javascript">
+
+        function timeLimitChanged() {
+            document.getElementById("duration").classList.toggle("d-none");
+        }
+
+        function autoCalcChanged() {
+            let pointsInputs = document.querySelectorAll(".question-points");
+            if (pointsInputs.length > 0) {
+                if (document.getElementById("autoPointsCalculation").checked) {
+                    let pointsPerQuestion = parseFloat((100 / pointsInputs.length).toFixed(2));
+                    pointsInputs.forEach(p => {
+                        p.readOnly = true;
+                        p.value = pointsPerQuestion;
+                    });
+                }
+                else {
+                    pointsInputs.forEach(p => {
+                        p.readOnly = false;
+                    });
+                }
+            }
+        }
+
+
+        function addQuestion(event) {
+            event.preventDefault();
+            let questionsCount = parseInt(document.getElementById("questionsCount").innerText) + 1;
+            document.getElementById("questionsCount").innerText = questionsCount;
+            let pointsUUID = uuidv4();
+            let questionTextUUID = uuidv4();
+            let isCorrectUUID = uuidv4();
+
+            let html = `<div data-order="${questionsCount}" class="form-group col-md-10 offset-md-1 question-box">` +
+                '<div class="form-group row ml-0 mr-0">' +
+                `<h3 class="col-auto question-label">Question ${questionsCount}</h3>` +
+                `<a style="cursor:pointer" class="col-auto mr-auto mt-2" onclick="deleteQuestion(event)">` +
+                '<i class="fas fa-minus-circle fa-lg" ></i>' +
+                '</a>' +
+                '<div class="col-auto">';
+
+            if (document.getElementById("autoPointsCalculation").checked)//if auto points set the input to readonly and calculate grade for each
+            {
+                let pointsPerQuestion = setAutoPoints(questionsCount);
+
+                html += '<label class="col-form-label">Points:</label>' +
+                    `<input readonly class="form-control question-points" type="number" data-val="true" data-val-range-min="0" data-val-range-max="100" data-val-range="Question&#x27;s points must be between 0 and 100" data-val-required="Question&#x27;s points are required" name="Points${pointsUUID}" value="${pointsPerQuestion}" />` +
+                    `<span class="text-danger field-validation-valid" data-valmsg-for="Points${pointsUUID}" data-valmsg-replace="true"></span>` +
+                    '</div>' +
+                    '</div>';
+            }
+            else {
+                html += '<label class="col-form-label">Points:</label>' +
+                    `<input class="form-control question-points" type="number" data-val="true" data-val-range-min="0" data-val-range-max="100" data-val-range="Question&#x27;s points must be between 0 and 100" data-val-required="Question&#x27;s points are required" name="Points${pointsUUID}" value="0" />` +
+                    `<span class="text-danger field-validation-valid" data-valmsg-for="Points${pointsUUID}" data-valmsg-replace="true"></span>` +
+                    '</div>' +
+                    '</div>';
+            }
+
+            html += '<div class="form-group row col-md-10 ml-0">' +
+                `<textarea rows="2" class="form-control question-text" placeholder="Please fill the question..." data-val="true" data-val-length="Question&#x27;s text must be minimum of 5 and maximum 500 characters" data-val-length-max="500" data-val-length-min="5" data-val-required="Question&#x27;s text is required" maxlength="500" name="QuestionText${questionTextUUID}" value=""></textarea>` +
+                `<span class="text-danger field-validation-valid" data-valmsg-for="QuestionText${questionTextUUID}" data-valmsg-replace="true"></span>` +
+                '</div>' +
+                '<h5 style="margin-left:15px">Answers</h5><hr class="mt-0"/>' +
+                '<fieldset  class="answers-list">' +
+                '</fieldset >' +
+                `<span class="text-danger field-validation-valid" data-valmsg-for="isCorrect${isCorrectUUID}" data-valmsg-replace="true"></span>` +
+                '<div style="margin-top:5px">' +
+                `<a style="cursor:pointer" onclick="addAnswer(event,'${isCorrectUUID}')">` +
+                '<i class="fas fa-plus-circle fa-lg" style="margin-left:7px"></i>' +
+                '<span style="margin-left:5px;">New Answer</span>' +
+                '</a>' +
+                '</div>' +
+                '</div>';
+
+            document.getElementById("questions-list").insertAdjacentHTML("beforeend",
+                html);
+
+            resetValidation();
+        }
+
+        function setAutoPoints(questionsCount) {
+            let pointsPerQuestion = parseFloat((100 / questionsCount).toFixed(2));
+            let pointsInputs = document.querySelectorAll(".question-points");
+            if (pointsInputs.length > 0)
+                pointsInputs.forEach(p => p.value = pointsPerQuestion);
+
+            return pointsPerQuestion;
+        }
+
+        function addAnswer(event, isCorrectUUID) {
+            event.preventDefault();
+            let questionId = event.currentTarget.parentElement.parentElement.getAttribute("data-order");
+            let answerTextUUID = uuidv4();
+
+
+            document.querySelector(`[data-order="${questionId}"] .answers-list`).insertAdjacentHTML("beforeend",
+                '<div class="form-check">' +
+                '<div class="form-group row">' +
+                '<div class="form-group col-10">'+
+                `<input style="margin-top:28px" class="form-check-input is-correct" type="radio" data-val="true" data-val-required="Please mark one of the answers as correct" name="isCorrect${isCorrectUUID}">` +
+                `<textarea rows="2" class="form-control answer-text" placeholder="Please fill the answer..." data-val="true" data-val-required="Please fill the answer or delete it" data-val-length="Answer must be maximum of 500 characters" maxlength="500" name="AnswerText${answerTextUUID}" value=""></textarea>` +
+                `<span class="text-danger field-validation-valid" data-valmsg-for="AnswerText${answerTextUUID}" data-valmsg-replace="true"></span>` +
+                '</div>' +
+                '<div class="form-group col-auto mt-3">' +
+                `<a style="cursor:pointer" onclick="deleteAnswer(event)">` +
+                '<i class="fas fa-minus-circle fa-lg" ></i>' + 
+                '</a>' +
+                '</div>' +
+                '</div>' +
+                '</div>');
+
+            resetValidation();
+        }
+
+        function resetValidation() {
+
+            let form = document.getElementById("createExamForm");
+            $(form).removeData("validator")    // Added by jQuery Validation
+                .removeData("unobtrusiveValidation");   // Added by jQuery Unobtrusive Validation
+            $.validator.unobtrusive.parse(form);
+        }
+
+        async function postExam(event) {
+            event.preventDefault();
+            if ($("#createExamForm").valid()) {
+                let title = document.getElementById("title").value;
+                let courseId = document.getElementById("CourseId").value;
+                let startDate = document.getElementById("startDate").value + "T00:00:00";
+                let finishDate = document.getElementById("finishDate").value + "T00:00:00";
+                let timeLimit = document.getElementById("timeLimit").checked;
+                let duration = timeLimit ? document.getElementById("duration").value : null;//if time limit not checked duration is null else it will check the duration input
+                let autoPointsCalculation = document.getElementById("autoPointsCalculation").checked;
+                if (duration != null) {
+                    if (duration === "") {//if the duration inout remained untouched although the time limit is checked
+                        duration = null;//set the duration to null
+                        timeLimit = false;//sets time limit to false
+                    }
+                    else {
+                        duration += ":00";//In order to be in valid format
+                    }
+                }
+
+                let questionsCount = parseInt(document.getElementById("questionsCount").innerText);
+
+                let questions = [];
+                for (var i = 0; i < questionsCount; i++) {
+                    let question = {};
+                    question.Text = document.querySelector(`[data-order="${i + 1}"] .question-text`).value;
+
+                    question.Points = document.querySelector(`[data-order="${i + 1}"] .question-points`).value;
+
+                    question.Answers = [];
+
+                    let texts = document.querySelectorAll(`[data-order="${i + 1}"] .answer-text`);
+                    let radiobuttoms = document.querySelectorAll(`[data-order="${i + 1}"] .is-correct`);
+                    for (var j = 0; j < texts.length; j++) {
+                        let answer = {};
+                        answer.text = texts[j].value;
+                        radiobuttoms[j].checked ? answer.isCorrect = true : answer.isCorrect = false;
+                        question.Answers.push(answer);
+                    }
+                    questions.push(question);
+                }
+                // make the ajax call
+                //let check = JSON.stringify({title, startDate, finishDate, timeLimit, autoPointsCalculation, questions});
+                await fetch('/Exams/Create', {
+                    method: 'POST',
+                    headers: {
+                        "X-ANTI-FORGERY-TOKEN": document.getElementsByName("__RequestVerificationToken")[0].value,
+                        'Content-Type': 'application/json',
+                        "Accept": "application/json"
+
+                    },
+                    body: JSON.stringify({ title, courseId, startDate, finishDate, timeLimit, duration, autoPointsCalculation, questions }) // body data type must match "Content-Type" header
+                }).then(function (response) {
+                    if (response.status===400) {
+                        response.json().then(data => {
+                            //data.Questions == null ? console.log(true) : console.log(false);
+                            $('#createExamForm').validate().showErrors(data);
+                        });
+                    }
+                });
+            }
+        }
+
+        function deleteQuestion(event) {
+            let questionId =parseInt(event.currentTarget.parentElement.parentElement.getAttribute("data-order"));
+            document.querySelector(`[data-order="${questionId}"]`).remove();
+            let questionsCount = parseInt(document.getElementById("questionsCount").innerText);
+            for (var i = questionId + 1; i <= questionsCount; i++) {
+                document.querySelector(`[data-order="${i}"] .question-label`).innerText=`Question ${i-1}`;
+                document.querySelector(`[data-order="${i}"]`).setAttribute("data-order", `${i - 1}`);
+            }
+            document.getElementById("questionsCount").innerText = questionsCount-1;
+            setAutoPoints(questionsCount-1);
+        }
+
+        function deleteAnswer(event) {
+            event.currentTarget.parentElement.parentElement.parentElement.remove();
+        }
+    </script>
+}

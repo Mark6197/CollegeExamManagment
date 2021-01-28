@@ -1,4 +1,5 @@
 using AutoMapper;
+using ExamsWebApp.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -23,13 +24,16 @@ namespace ExamsWebApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAntiforgery(x => x.HeaderName = "X-ANTI-FORGERY-TOKEN");
+
             services.AddControllersWithViews(options =>
             {
                 var policy = new AuthorizationPolicyBuilder()
                                 .RequireAuthenticatedUser()
                                 .Build();
                 options.Filters.Add(new AuthorizeFilter(policy));
-            }).AddXmlSerializerFormatters();
+            }).AddXmlSerializerFormatters().AddJsonOptions(options =>
+            options.JsonSerializerOptions.Converters.Add(new TimeSpanToStringConverter()));
 
             services.AddDataAccessServices(Configuration.GetConnectionString("AppDomainContextConnection"));
             services.AddRazorPages();

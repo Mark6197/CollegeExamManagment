@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence.Shared;
 
 namespace Persistence.Migrations
 {
     [DbContext(typeof(AppDomainDbContext))]
-    partial class AppDomainDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210116180803_ChangedExamDurationToNullable")]
+    partial class ChangedExamDurationToNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -65,34 +67,6 @@ namespace Persistence.Migrations
                     b.HasIndex("TeacherId");
 
                     b.ToTable("Courses");
-                });
-
-            modelBuilder.Entity("Domain.Exams.Answer", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .UseIdentityColumn();
-
-                    b.Property<int>("AnswerNumInQuestion")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsCorrect")
-                        .HasColumnType("bit");
-
-                    b.Property<long>("QuestionId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("QuestionId");
-
-                    b.ToTable("Answer");
                 });
 
             modelBuilder.Entity("Domain.Exams.Exam", b =>
@@ -151,9 +125,7 @@ namespace Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Text")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -276,15 +248,6 @@ namespace Persistence.Migrations
                     b.Navigation("Teacher");
                 });
 
-            modelBuilder.Entity("Domain.Exams.Answer", b =>
-                {
-                    b.HasOne("Domain.Exams.Question", null)
-                        .WithMany("Answers")
-                        .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Domain.Exams.Exam", b =>
                 {
                     b.HasOne("Domain.Courses.Course", null)
@@ -351,8 +314,6 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Exams.Question", b =>
                 {
-                    b.Navigation("Answers");
-
                     b.Navigation("StudentsQuestions");
                 });
 

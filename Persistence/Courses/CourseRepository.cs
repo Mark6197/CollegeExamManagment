@@ -23,6 +23,12 @@ namespace Persistence.Courses
                                         .ToListAsync();
         }
 
+        public async Task<IEnumerable<Course>> GetCoursesByTeacherIdAsync(long teacherId)
+        {
+            return await Context.Courses.Where(c => c.TeacherId == teacherId)
+                                        .ToListAsync();
+        }
+
         public Course GetCourseWithStudents(long? id)
         {
             return  Context.Courses.Where(c => c.Id == id)

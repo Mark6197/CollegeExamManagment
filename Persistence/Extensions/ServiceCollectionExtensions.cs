@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Persistence.Courses;
+using Persistence.Exams;
 using Persistence.Shared;
 using Persistence.Users.Students;
 using Persistence.Users.Teachers;
@@ -19,6 +20,7 @@ namespace Persistence.Extensions
             services.AddScoped<ITeacherRepository, TeacherRepository>();
             services.AddScoped<IStudentRepository, StudentRepository>();
             services.AddScoped<ICourseRepository, CourseRepository>();
+            services.AddScoped<IExamRepository, ExamRepository>();
         }
     }
 }

@@ -28,20 +28,20 @@
                     <a asp-controller="Home" asp-action="Index">Home</a>
                 </li>
                 <li>
-                    <a asp-controller="Courses" asp-action="List">Courses</a>
-                </li>
-                <li>
                     <a class="expended-link" asp-controller="Courses" asp-action="List">Courses</a>
-                    <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle expended-link-arrow"></a>
-                    <ul class="collapse list-unstyled" id="pageSubmenu">
+                    <a href="#courses" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle expended-link-arrow"></a>
+                    <ul class="collapse list-unstyled" id="courses">
                         <li>
                             <a asp-controller="Courses" asp-action="Create">Create New Course</a>
                         </li>
+                    </ul>
+                </li> 
+                <li>
+                    <a class="expended-link" asp-controller="Exams" asp-action="List">Exams</a>
+                    <a href="#exams" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle expended-link-arrow"></a>
+                    <ul class="collapse list-unstyled" id="exams">
                         <li>
-                            <a href="#">Page 2</a>
-                        </li>
-                        <li>
-                            <a href="#">Page 3</a>
+                            <a asp-controller="Exams" asp-action="Create">Create New Exam</a>
                         </li>
                     </ul>
                 </li>
