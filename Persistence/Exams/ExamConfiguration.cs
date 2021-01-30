@@ -13,6 +13,7 @@ namespace Persistence.Exams
             builder.Property(c => c.StartDate).HasColumnType("Date");
             builder.Property(c => c.FinishDate).HasColumnType("Date");
             builder.Property(c => c.Duration).HasColumnType("Time");
+
         }
     }
 }

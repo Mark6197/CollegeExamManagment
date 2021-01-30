@@ -8,7 +8,7 @@ namespace Domain.Exams
     {
         public string Text { get; set; }
 
-        public ICollection<Answer> Answers { get; set; }
+        public IList<Answer> Answers { get; set; }
         public ICollection<StudentQuestion> StudentsQuestions { get; set; }
         public int QuestionNumInExam { get; set; }
         public double Points { get; set; }

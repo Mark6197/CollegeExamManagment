@@ -69,7 +69,17 @@ namespace ExamsWebApp.Controllers
                 {
                     var exam = _mapper.Map<Exam>(createExamViewModel);
                     exam.TeacherId = User.GetLoggedInUserId<long>();
-                    //await _unitOfWork.Exams.AddAsync(exam);
+                    for (int i = 0; i < exam.Questions.Count; i++)
+                    {
+                        exam.Questions[i].QuestionNumInExam = i + 1;
+
+                        for (int j = 0; j < exam.Questions[i].Answers.Count; j++)
+                        {
+                            exam.Questions[i].Answers[j].AnswerNumInQuestion = j + 1;
+                        }
+                    }
+                    await _unitOfWork.Exams.AddAsync(exam);
+                    await _unitOfWork.SaveAsync();
                 }
                 catch (Exception ex)
                 {

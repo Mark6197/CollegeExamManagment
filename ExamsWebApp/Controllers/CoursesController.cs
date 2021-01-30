@@ -22,7 +22,7 @@ namespace ExamsWebApp.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public CoursesController( IUnitOfWork unitOfWork, IMapper mapper)
+        public CoursesController(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -48,7 +48,7 @@ namespace ExamsWebApp.Controllers
             if (id == null)
                 return NotFound();
 
-            var course =  _unitOfWork.Courses.GetCourseWithStudents(id);
+            var course = _unitOfWork.Courses.GetCourseWithStudents(id);
 
             if (course == null)
                 return NotFound();
@@ -78,10 +78,10 @@ namespace ExamsWebApp.Controllers
             {
                 return View();
             }
-                Course course = _mapper.Map<Course>(createCourseViewModel);
-                course.TeacherId = User.GetLoggedInUserId<long>();
-                await _unitOfWork.Courses.AddAsync(course);
-                await _unitOfWork.SaveAsync();
+            Course course = _mapper.Map<Course>(createCourseViewModel);
+            course.TeacherId = User.GetLoggedInUserId<long>();
+            await _unitOfWork.Courses.AddAsync(course);
+            await _unitOfWork.SaveAsync();
 
             return RedirectToAction(nameof(List));
         }

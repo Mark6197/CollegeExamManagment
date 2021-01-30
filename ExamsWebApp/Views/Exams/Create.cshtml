@@ -46,7 +46,7 @@
                 </div>
 
                 <div class="col-md-3 ml-3">
-                    <input id="duration" asp-for="Duration" class="form-control d-none" />
+                    <input id="duration" asp-for="Duration" value="00:00" class="form-control d-none" />
                     <span asp-validation-for="Duration" class="text-danger"></span>
                 </div>
             </div>
@@ -68,8 +68,8 @@
                     <label id="questionsCount">0</label>
                 </div>
             </div>
-                <input style="display:none" type="text" name="Questions" value="" />
-                <span class="text-danger field-validation-valid" data-valmsg-for="Questions" data-valmsg-replace="true"></span>
+                <input readonly style="display:none" type="text" name="Questions" value="" />
+                <span class="text-danger field-validation-valid" id="questionsValidation" data-valmsg-for="Questions" data-valmsg-replace="true"></span>
             <hr />
 
             <div class="col-md-12" id="questions-list" name="Questions">
@@ -144,14 +144,14 @@
                 let pointsPerQuestion = setAutoPoints(questionsCount);
 
                 html += '<label class="col-form-label">Points:</label>' +
-                    `<input readonly class="form-control question-points" type="number" data-val="true" data-val-range-min="0" data-val-range-max="100" data-val-range="Question&#x27;s points must be between 0 and 100" data-val-required="Question&#x27;s points are required" name="Points${pointsUUID}" value="${pointsPerQuestion}" />` +
+                    `<input readonly onchange="removeInvalidPoints(event)" class="form-control question-points" type="number" data-val="true" data-val-range-min="0" data-val-range-max="100" data-val-range="Question&#x27;s points must be between 0 and 100" data-val-required="Question&#x27;s points are required" name="Points${pointsUUID}" value="${pointsPerQuestion}" />` +
                     `<span class="text-danger field-validation-valid" data-valmsg-for="Points${pointsUUID}" data-valmsg-replace="true"></span>` +
                     '</div>' +
                     '</div>';
             }
             else {
                 html += '<label class="col-form-label">Points:</label>' +
-                    `<input class="form-control question-points" type="number" data-val="true" data-val-range-min="0" data-val-range-max="100" data-val-range="Question&#x27;s points must be between 0 and 100" data-val-required="Question&#x27;s points are required" name="Points${pointsUUID}" value="0" />` +
+                    `<input onchange="removeInvalidPoints(event)" class="form-control question-points" type="number" data-val="true" data-val-range-min="0" data-val-range-max="100" data-val-range="Question&#x27;s points must be between 0 and 100" data-val-required="Question&#x27;s points are required" name="Points${pointsUUID}" value="0" />` +
                     `<span class="text-danger field-validation-valid" data-valmsg-for="Points${pointsUUID}" data-valmsg-replace="true"></span>` +
                     '</div>' +
                     '</div>';
@@ -226,13 +226,16 @@
             if ($("#createExamForm").valid()) {
                 let title = document.getElementById("title").value;
                 let courseId = document.getElementById("CourseId").value;
+                if (courseId === 0)
+                    courseId = null;
+
                 let startDate = document.getElementById("startDate").value + "T00:00:00";
                 let finishDate = document.getElementById("finishDate").value + "T00:00:00";
                 let timeLimit = document.getElementById("timeLimit").checked;
                 let duration = timeLimit ? document.getElementById("duration").value : null;//if time limit not checked duration is null else it will check the duration input
                 let autoPointsCalculation = document.getElementById("autoPointsCalculation").checked;
                 if (duration != null) {
-                    if (duration === "") {//if the duration inout remained untouched although the time limit is checked
+                    if (duration === "" || duration==="00:00") {//if the duration inout remained untouched although the time limit is checked
                         duration = null;//set the duration to null
                         timeLimit = false;//sets time limit to false
                     }

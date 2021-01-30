@@ -48,6 +48,7 @@ namespace ExamsWebApp.Models.ExamViewModels
             {
                 errors.Add(new ValidationResult($"Starting date can't be in the past", new List<string> { nameof(StartDate) }));
             }
+
             if (FinishDate.Date < DateTime.Now.Date)
             {
                 errors.Add(new ValidationResult($"End date can't be in the past", new List<string> { nameof(FinishDate) }));
@@ -57,10 +58,33 @@ namespace ExamsWebApp.Models.ExamViewModels
                 if (FinishDate < StartDate)
                     errors.Add(new ValidationResult($"End date needs to be greater than starting date", new List<string> { nameof(FinishDate) }));
             }
-            if (Questions.Count == 0)
-            {
-                errors.Add(new ValidationResult($"Exam must have at least one question", new List<string> { nameof(Questions) }));
-            }
+
+            //if (Questions.Count == 0)
+            //{
+            //    errors.Add(new ValidationResult($"Exam must have at least one question", new List<string> { nameof(Questions) }));
+            //}
+            //else
+            //{
+            //    foreach (var question in Questions)
+            //    {
+            //        if (question.Answers.Count<2)
+            //        {
+            //            errors.Add(new ValidationResult($"All questions must have at least two answers", new List<string> { nameof(Questions) }));
+            //            return errors;
+            //        }
+            //    }
+
+            //    if (!AutoPointsCalculation)
+            //    {
+            //        double points = 0;
+            //        foreach (var question in Questions)
+            //        {
+            //            points += question.Points;
+            //        }
+            //        if (points!=100)
+            //            errors.Add(new ValidationResult($"Total sum of the points must be equal to 100", new List<string> { nameof(Questions) }));
+            //    }
+            //}
             return errors;
         }
 
