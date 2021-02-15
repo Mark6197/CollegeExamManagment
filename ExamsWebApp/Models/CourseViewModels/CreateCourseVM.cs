@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ExamsWebApp.Models.CourseViewModels
 {
-    public class CreateCourseViewModel: IValidatableObject
+    public class CreateCourseVM: IValidatableObject
     {
         [Required(ErrorMessage ="Name is required")]
         [StringLength(50,MinimumLength =5, ErrorMessage = "Name must be minimum of 5 and maximum 1000 characters")]

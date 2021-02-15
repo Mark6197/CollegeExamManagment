@@ -2,10 +2,8 @@
 using Domain.Interfaces.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Shared;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Persistence.Courses
@@ -16,23 +14,31 @@ namespace Persistence.Courses
         {
         }
 
-        public async Task<IEnumerable<Course>> GetCoursesWithStudentsByTeacherIdAsync(long teacherId)
+        public async Task<IEnumerable<Course>> GetCoursesWithStudentsAsync(long teacherId)
         {
             return await Context.Courses.Where(c => c.TeacherId == teacherId)
                                         .Include(c=>c.Students)
                                         .ToListAsync();
         }
 
-        public async Task<IEnumerable<Course>> GetCoursesByTeacherIdAsync(long teacherId)
+        public async Task<IEnumerable<Course>> GetCoursesAsync(long teacherId)
         {
             return await Context.Courses.Where(c => c.TeacherId == teacherId)
                                         .ToListAsync();
         }
 
-        public Course GetCourseWithStudents(long? id)
+        public async Task<Course> GetCourseWithStudentsAndExamsAsync(long id)
         {
-            return  Context.Courses.Where(c => c.Id == id)
-                                                 .Include(c => c.Students).FirstOrDefault();
+            return await Context.Courses.Where(c => c.Id == id)
+                                                 .Include(c => c.Students)
+                                                 .Include(c => c.AssignedExams)
+                                                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<Course> GetCourseWithFullExamsAsync(long id)
+        {
+            return await Context.Courses.Where(c => c.Id == id)
+                                                 .Include(c => c.AssignedExams).ThenInclude(e=>e.Questions).ThenInclude(q=>q.Answers).FirstOrDefaultAsync();
         }
 
         public AppDomainDbContext Context

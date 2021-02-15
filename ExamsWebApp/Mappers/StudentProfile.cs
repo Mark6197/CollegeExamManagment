@@ -12,7 +12,7 @@ namespace ExamsWebApp.Mappers
     {
         public StudentProfile()
         {
-            CreateMap<Student, StudentViewModel>();
+            CreateMap<Student, StudentVM>();
 
         }
     }

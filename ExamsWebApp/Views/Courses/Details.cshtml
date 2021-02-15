@@ -1,14 +1,12 @@
-﻿@model ExamsWebApp.Models.CourseViewModels.CourseExtendedDetailsViewModel;
+﻿@model CourseExtendedDetailsVM;
 
 @{
-    ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_TeacherLayout.cshtml";
 }
 
-<h1>@Model.Details.Name</h1>
 
 <div>
-    <h4>Course</h4>
+    <h1>@Model.Details.Name</h1>
     <hr />
     <dl class="row">
         <dt class="col-sm-3 col-lg-2">
@@ -31,6 +29,11 @@
         </dd>
     </dl>
 
+    <h3>Students:</h3>
+    @if (Model.Students.Count == 0)
+    {
+        <label>No Students Yet</label>
+    }
     <div class="card-container">
         @foreach (var student in Model.Students)
         {
@@ -43,8 +46,112 @@
             </div>
         }
     </div>
+
+
+    <h3>Exams:</h3>
+    <!-- Button trigger modal -->
+    <a data-toggle="modal" data-target="#assignExamToCourseModal" style="cursor:pointer">
+        Assign New Exam
+    </a>
+
+    <form asp-action="AssignExamToCourse"
+          data-ajax="true"
+          data-ajax-method="POST"
+          data-ajax-mode="replace"
+          data-ajax-update="#assignExamToCourseModal">
+        <div class="modal fade" id="assignExamToCourseModal" tabindex="-1" role="dialog" aria-labelledby="assignExamToCourseModalLabel" aria-hidden="true">
+            @await Html.PartialAsync("_CreateAssignedExamPartial",
+                new CreateAssignedExamVM() { CourseId = Model.Details.Id, TeacherId = Model.TeacherId, CourseName = Model.Details.Name })
+        </div>
+    </form>
+
+    @if (Model.AssignedExams.Count == 0)
+    {
+        <label>No Assigned Exams Yet</label>
+    }
+    else
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.AssignedExams[0].Title)
+                    </th>
+
+                    <th>
+                        @Html.DisplayNameFor(model => model.AssignedExams[0].StartDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.AssignedExams[0].FinishDate)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var exam in Model.AssignedExams)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => exam.Title)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => exam.StartDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => exam.FinishDate)
+                        </td>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@exam.Id">
+                                <i class="fa fa-search-plus"></i>
+                            </a> |
+                            <a asp-action="Edit" asp-route-id="@exam.Id">
+                                <i class="fa fa-edit"></i>
+                            </a> |
+                            <form asp-action="Delete" asp-controller="Exams" asp-route-id="@exam.Id"  asp-route-returnAction="@Actions.Details"
+                                  id="deleteForm@(exam.Id)" style="display:inline">
+                                <a value="Delete" style="cursor:pointer" onclick="deleteExam('@exam.Title','@exam.Id')">
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Details.Id">Edit</a> |
     <a asp-action="List">Back to all courses</a>
 </div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/lib/sweetalert/sweetalert.min.js"></script>
+
+    <script type="text/javascript">
+        $('#assignExamToCourseModal').on('hidden.bs.modal', function (e) {
+            let isSuccess = document.getElementById("assignExamToCourseModalLabel").innerText.toLowerCase().includes("success");
+            if (isSuccess) {
+                location.reload();
+            }
+        });
+
+
+        function deleteExam(name, id) {
+            swal({
+                title: "Are you sure?",
+                text: `You will not be able to recover this exam: ${name}`,
+                icon: "warning",
+                dangerMode: true,
+                buttons: ["Cancel", "Confirm"]
+            }).then(function (isConfirm) {
+                if (isConfirm) {
+                    document.querySelector("#deleteForm" + id).submit();
+                }
+            });
+        }
+    </script>
+}

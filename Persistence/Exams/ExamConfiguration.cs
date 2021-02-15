@@ -9,11 +9,12 @@ namespace Persistence.Exams
     {
         public void Configure(EntityTypeBuilder<Exam> builder)
         {
-            builder.Property(c => c.Title).IsRequired().HasMaxLength(50);
-            builder.Property(c => c.StartDate).HasColumnType("Date");
-            builder.Property(c => c.FinishDate).HasColumnType("Date");
-            builder.Property(c => c.Duration).HasColumnType("Time");
 
+            builder.HasDiscriminator(e => e.ExamType).HasValue<Exam>(ExamType.Exam).HasValue<AssignedExam>(ExamType.AssignedExam);
+            builder.Property(c => c.Title).IsRequired().HasMaxLength(50).HasColumnName("Title");
+            builder.Property(c => c.Duration).HasColumnType("Time").HasColumnName("Duration");
+            builder.Property(c => c.TeacherId).HasColumnName("TeacherId");
+            builder.Property(c => c.AutoPointsCalculation).HasColumnName("AutoPointsCalculation");
         }
     }
 }

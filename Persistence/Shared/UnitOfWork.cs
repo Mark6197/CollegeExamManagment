@@ -13,19 +13,21 @@ namespace Persistence.Shared
 
         public UnitOfWork(AppDomainDbContext context,IStudentRepository studentRepository,
             ITeacherRepository teacherRepository,ICourseRepository courseRepository,
-            IExamRepository examRepository)
+            IExamRepository examRepository,IAssignedExamRepository assignedExamRepository)
         {
             _context = context;
             Students = studentRepository;
             Teachers = teacherRepository;
             Courses = courseRepository;
             Exams = examRepository;
+            AssignedExams = assignedExamRepository;
         }
 
         public IStudentRepository Students { get; private set; }
         public ITeacherRepository Teachers { get; private set; }
         public ICourseRepository Courses { get; private set; }
         public IExamRepository Exams { get; private set; }
+        public IAssignedExamRepository AssignedExams { get; private set; }
 
 
         public async Task<int> SaveAsync()

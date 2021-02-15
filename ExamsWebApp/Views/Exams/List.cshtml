@@ -1,13 +1,13 @@
-﻿@model IEnumerable<CourseBasicDetailsVM>
+﻿@model IEnumerable<GenericExamBasicDetailsVM>
 @{
-    ViewData["Title"] = "Courses";
+    ViewData["Title"] = "Exams";
     if (User.IsInRole("Teacher"))
     {
         Layout = "_TeacherLayout";
     }
 }
 
-<h1>Courses</h1>
+<h1>Exams</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -16,16 +16,16 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CourseName)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.StartDate)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.FinishDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StudentsCount)
             </th>
             <th></th>
         </tr>
@@ -35,7 +35,10 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Name)
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CourseName)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.StartDate)
@@ -44,17 +47,14 @@
                     @Html.DisplayFor(modelItem => item.FinishDate)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.StudentsCount)
-                </td>
-                <td>
                     <a asp-action="Details" asp-route-id="@item.Id">
                         <i class="fa fa-search-plus"></i>
                     </a> |
                     <a asp-action="Edit" asp-route-id="@item.Id">
                         <i class="fa fa-edit"></i>
                     </a> |
-                    <form asp-action="Delete" asp-route-id="@item.Id" id="deleteForm@(item.Id)" style="display:inline">
-                        <a value="Delete" style="cursor:pointer" onclick="deleteCourse('@item.Name','@item.Id')">
+                    <form asp-action="Delete" asp-route-id="@item.Id" asp-route-returnAction="@Actions.List" id="deleteForm@(item.Id)" style="display:inline">
+                        <a value="Delete" style="cursor:pointer" onclick="deleteExam('@item.Title','@item.Id')">
                             <i class="fa fa-trash"></i>
                         </a>
                     </form>
@@ -69,10 +69,10 @@
     <script src="~/lib/sweetalert/sweetalert.min.js"></script>
     <script type="text/javascript">
 
-        function deleteCourse(name, id) {
+        function deleteExam(name, id) {
             swal({
                 title: "Are you sure?",
-                text: `You will not be able to recover this course: ${name}`,
+                text: `You will not be able to recover this exam: ${name}`,
                 icon: "warning",
                 dangerMode: true,
                 buttons: ["Cancel", "Confirm"]
@@ -84,5 +84,4 @@
 
         }
     </script>
-
 }

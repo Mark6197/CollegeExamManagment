@@ -7,11 +7,15 @@ namespace Domain.Exams
     public class Question : Entity
     {
         public string Text { get; set; }
-
         public IList<Answer> Answers { get; set; }
         public ICollection<StudentQuestion> StudentsQuestions { get; set; }
         public int QuestionNumInExam { get; set; }
         public double Points { get; set; }
         public long ExamId { get; set; }
+
+        public Question()
+        {
+            Answers = new List<Answer>();
+        }
     }
 }

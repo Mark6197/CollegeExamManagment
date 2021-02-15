@@ -21,6 +21,7 @@ namespace Persistence.Extensions
             services.AddScoped<IStudentRepository, StudentRepository>();
             services.AddScoped<ICourseRepository, CourseRepository>();
             services.AddScoped<IExamRepository, ExamRepository>();
+            services.AddScoped<IAssignedExamRepository, AssignedExamRepository>();
         }
     }
 }

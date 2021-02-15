@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ExamsWebApp.Models.CourseViewModels
 {
-    public class EditCourseViewModel: IValidatableObject
+    public class EditCourseVM: IValidatableObject
     {
         public long Id { get; set; }
         [Required(ErrorMessage ="Name is required")]

@@ -1,24 +1,19 @@
 ﻿using AutoMapper;
-using Domain.Courses;
 using Domain.Exams;
 using Domain.Interfaces.Persistence;
-using ExamsWebApp.Areas.Identity.Data;
 using ExamsWebApp.Extensions;
+using ExamsWebApp.Helpers;
 using ExamsWebApp.Models.ExamViewModels;
-using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ExamsWebApp.Controllers
 {
+
+
     public class ExamsController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -30,38 +25,56 @@ namespace ExamsWebApp.Controllers
             _mapper = mapper;
         }
         // GET: ExamsController
-        public ActionResult Index()
+        public ActionResult List()
         {
-            return View();
+            var viewModel = new List<GenericExamBasicDetailsVM>();
+            long userId = User.GetLoggedInUserId<long>();
+            var exams = _unitOfWork.Exams.GetAllExamsWithCoursesByTeacher(userId);
+            foreach (var exam in exams)
+            {
+                var examViewModel = _mapper.Map<GenericExamBasicDetailsVM>(exam);
+                viewModel.Add(examViewModel);
+            }
+            return View(viewModel);
         }
 
         // GET: ExamsController/Details/5
-        public ActionResult Details(int id)
+        [ActionName("Details")]
+        public async Task<ActionResult> NotAssignedExamDetails(long id)
         {
-            return View();
+            if (id <= 0)
+                return NotFound();
+
+            Exam exam= await _unitOfWork.Exams.GetNotAssignedFullExamAsync(id);
+
+            if (exam==null)
+                return NotFound();
+            GenericExamExtendedDetails viewModel =_mapper.Map<GenericExamExtendedDetails>(exam);
+
+            return View(viewModel);
+        }
+
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+        public async Task<ActionResult> AssignedExamDetails(long id)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+        {
+            if (id <= 0)
+                return NotFound();
+
+
+            return View("Details");
         }
 
         // GET: ExamsController/Create
-        public async Task<ActionResult> Create()
+        public ActionResult Create()
         {
-            long userId = User.GetLoggedInUserId<long>();
-            var courses = await _unitOfWork.Courses.GetCoursesByTeacherIdAsync(userId);
-            var courseSelectList = new List<SelectListItem>
-            {
-                new SelectListItem(courses.Count()>0 ? "No course assigned" : "No courses yet", "0")
-            };
-
-            foreach (var course in courses)
-                courseSelectList.Add(new SelectListItem(course.Name, course.Id.ToString()));
-
-            ViewBag.Courses = courseSelectList;
             return View();
         }
 
         // POST: ExamsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult<CreateExamViewModel>> Create([FromBody] CreateExamViewModel createExamViewModel)
+        public async Task<ActionResult<CreateExamVM>> Create([FromBody] CreateExamVM createExamViewModel)
         {
             if (ModelState.IsValid)
             {
@@ -81,7 +94,7 @@ namespace ExamsWebApp.Controllers
                     await _unitOfWork.Exams.AddAsync(exam);
                     await _unitOfWork.SaveAsync();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     throw;
                 }
@@ -116,24 +129,23 @@ namespace ExamsWebApp.Controllers
         }
 
         // GET: ExamsController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(long id, Actions returnAction)
         {
-            return View();
-        }
+            var c=HttpContext.Request.Path;
+            var exam = await _unitOfWork.Exams.GetExamWithQuestionsAndAnswerAsync(id);
+            if (exam == null)
+                return NotFound();
 
-        // POST: ExamsController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
+            _unitOfWork.Exams.Remove(exam);
+            await _unitOfWork.SaveAsync();
+
+            if (returnAction == Actions.Details)
             {
-                return RedirectToAction(nameof(Index));
+                AssignedExam assignedExam = exam as AssignedExam;
+                if (assignedExam!=null)
+                    return RedirectToAction(nameof(CoursesController.Details), "Courses", new { id = assignedExam.CourseId});
             }
-            catch
-            {
-                return View();
-            }
+            return RedirectToAction(nameof(List));
         }
     }
 }

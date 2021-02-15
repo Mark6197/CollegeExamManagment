@@ -1,29 +1,22 @@
 ﻿using Domain.Common;
-using Domain.Users.Students;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Exams
 {
+    public enum ExamType
+    {
+        Exam=1,
+        AssignedExam=2
+    }
+
     public class Exam : Entity
     {
         public string Title { get; set; }
-
         public IList<Question> Questions { get; set; }
-
-        public long? CourseId { get; set; }
-
-        public ICollection<StudentExam> StudentsExams { get; set; }
-
         public long TeacherId { get; set; }
-
-        public DateTime StartDate { get; set; }
-
-        public DateTime FinishDate { get; set; }
-
+        public ExamType ExamType { get; set; }
         public TimeSpan? Duration { get; set; }
-
         public bool AutoPointsCalculation { get; set; }
 
         public Exam()

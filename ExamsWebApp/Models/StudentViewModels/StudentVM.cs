@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ExamsWebApp.Models.StudentViewModels
 {
-    public class StudentViewModel
+    public class StudentVM
     {
         [Display(Name ="Name")]
         public string FullName { get; set; }

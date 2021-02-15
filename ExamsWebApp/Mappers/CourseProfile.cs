@@ -9,10 +9,15 @@ namespace ExamsWebApp.Mappers
     {
         public CourseProfile()
         {
-            CreateMap<Course, CreateCourseViewModel>().ReverseMap();
-            CreateMap<Course, EditCourseViewModel>().ReverseMap();
-            CreateMap<Course, CourseBasicDetailsViewModel>()
-                .ForMember(c => c.StudentsCount, o => o.MapFrom(c => c.Students.Count));
+            CreateMap<Course, CreateCourseVM>().ReverseMap();
+            CreateMap<Course, EditCourseVM>().ReverseMap();
+            CreateMap<Course, CourseBasicDetailsVM>()
+                .ForMember(c => c.StudentsCount, o => o.MapFrom(c => c.Students.Count));   
+            
+            CreateMap<Course, CourseExtendedDetailsVM>()
+                .ForMember(c => c.Details, o => o.MapFrom(c => c))
+                .ForMember(c => c.Students, o => o.MapFrom(c => c.Students))
+                .ForMember(c => c.AssignedExams, o => o.MapFrom(c => c.AssignedExams));
         }
     }
 }

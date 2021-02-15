@@ -17,13 +17,14 @@ namespace Domain.Courses
         public DateTime StartDate { get; set; }
         public DateTime FinishDate { get; set; }
         public ICollection<Student> Students { get; set; }
-        public ICollection<Exam> Exams { get; set; }
+        public IList<AssignedExam> AssignedExams { get; set; }
         public long TeacherId { get; set; }
         public Teacher Teacher { get; set; }
 
         public Course()
         {
             Students = new List<Student>();
+            AssignedExams = new List<AssignedExam>();
         }
     }
 }

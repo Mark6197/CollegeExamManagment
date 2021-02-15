@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ExamsWebApp.Models.ExamViewModels
 {
-    public class CreateAnswerViewModel
+    public class CreateAnswerVM
     {
         [Required(ErrorMessage = "Answer's text is required")]
         [StringLength(500, ErrorMessage = "Answer's text must be maximum 500 characters")]

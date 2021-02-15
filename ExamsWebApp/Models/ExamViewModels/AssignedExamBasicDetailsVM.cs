@@ -1,17 +1,15 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ExamsWebApp.Models.CourseViewModels
+namespace ExamsWebApp.Models.ExamViewModels
 {
-    public class CourseBasicDetailsViewModel
+    public class AssignedExamBasicDetailsVM
     {
         public long Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public string Title { get; set; }
 
         [DataType(DataType.Date)]
         [Display(Name = "Start Date")]
@@ -21,7 +19,5 @@ namespace ExamsWebApp.Models.CourseViewModels
         [Display(Name = "End Date")]
         public DateTime FinishDate { get; set; }
 
-        [Display(Name = "Students")]
-        public int StudentsCount { get; set; }
     }
 }

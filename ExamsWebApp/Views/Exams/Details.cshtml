@@ -1,0 +1,40 @@
+﻿@model GenericExamExtendedDetails
+
+@{
+    ViewData["Title"] = Model.BasicDetails.Title + " Details";
+    Layout = "~/Views/Shared/_TeacherLayout.cshtml";
+}
+
+
+<div>
+    <h1>@Model.BasicDetails.Title Exam</h1>
+    <hr />
+    <dl class="row">
+
+        @if (Model.BasicDetails.ExamType == Domain.Exams.ExamType.AssignedExam)
+        {
+            <dt class="col-sm-3 col-lg-2">
+                @Html.DisplayNameFor(model => model.BasicDetails.CourseName)
+            </dt>
+            <dd class="col-sm-9 col-lg-10">
+                @Html.DisplayFor(model => model.BasicDetails.CourseName)
+            </dd>
+            <dt class="col-sm-3 col-lg-2">
+                @Html.DisplayNameFor(model => model.BasicDetails.StartDate)
+            </dt>
+            <dd class="col-sm-9 col-lg-10">
+                @Html.DisplayFor(model => model.BasicDetails.StartDate)
+            </dd>
+            <dt class="col-sm-3 col-lg-2">
+                @Html.DisplayNameFor(model => model.BasicDetails.FinishDate)
+            </dt>
+            <dd class="col-sm-9 col-lg-10">
+                @Html.DisplayFor(model => model.BasicDetails.FinishDate)
+            </dd>
+        }
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.BasicDetails.Id">Edit</a> |
+    <a asp-action="List">Back to all Exams</a>
+</div>

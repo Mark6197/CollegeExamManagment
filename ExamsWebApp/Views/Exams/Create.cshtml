@@ -1,4 +1,4 @@
-﻿@model ExamsWebApp.Models.ExamViewModels.CreateExamViewModel
+﻿@model CreateExamVM
 
 @{
     ViewData["Title"] = "Create Exam";
@@ -19,23 +19,8 @@
                     <input id="title" asp-for="Title" class="form-control" />
                     <span asp-validation-for="Title" class="text-danger"></span>
                 </div>
-                <div class="form-group col-md-5">
-                    <label asp-for="CourseId"></label>
-                    <select asp-for="CourseId" class="form-control" asp-items="ViewBag.Courses"></select>
-                </div>
             </div>
-            <div class="form-group row">
-                <div class="form-group col-md-5 col-lg-4">
-                    <label asp-for="StartDate"></label>
-                    <input id="startDate" asp-for="StartDate" class="form-control" />
-                    <span asp-validation-for="StartDate" class="text-danger"></span>
-                </div>
-                <div class="form-group col-md-5 col-lg-4">
-                    <label asp-for="FinishDate"></label>
-                    <input id="finishDate" asp-for="FinishDate" class="form-control" />
-                    <span asp-validation-for="FinishDate" class="text-danger"></span>
-                </div>
-            </div>
+
             <div class="form-row align-items-center">
                 <div class="col-md-auto">
                     <div class="form-check">
@@ -225,12 +210,7 @@
             event.preventDefault();
             if ($("#createExamForm").valid()) {
                 let title = document.getElementById("title").value;
-                let courseId = document.getElementById("CourseId").value;
-                if (courseId === 0)
-                    courseId = null;
 
-                let startDate = document.getElementById("startDate").value + "T00:00:00";
-                let finishDate = document.getElementById("finishDate").value + "T00:00:00";
                 let timeLimit = document.getElementById("timeLimit").checked;
                 let duration = timeLimit ? document.getElementById("duration").value : null;//if time limit not checked duration is null else it will check the duration input
                 let autoPointsCalculation = document.getElementById("autoPointsCalculation").checked;
@@ -275,15 +255,16 @@
                         "Accept": "application/json"
 
                     },
-                    body: JSON.stringify({ title, courseId, startDate, finishDate, timeLimit, duration, autoPointsCalculation, questions }) // body data type must match "Content-Type" header
-                }).then(function (response) {
-                    if (response.status===400) {
-                        response.json().then(data => {
-                            //data.Questions == null ? console.log(true) : console.log(false);
-                            $('#createExamForm').validate().showErrors(data);
-                        });
-                    }
+                    body: JSON.stringify({ title, timeLimit, duration, autoPointsCalculation, questions }) // body data type must match "Content-Type" header
                 });
+                //    .then(function (response) {
+                //    if (response.status===400) {
+                //        response.json().then(data => {
+                //            //data.Questions == null ? console.log(true) : console.log(false);
+                //            $('#createExamForm').validate().showErrors(data);
+                //        });
+                //    }
+                //});
             }
         }
 

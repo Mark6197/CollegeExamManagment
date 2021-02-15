@@ -1,7 +1,7 @@
-﻿@model ExamsWebApp.Models.CourseViewModels.EditCourseViewModel;
+﻿@model EditCourseVM;
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit "+Model.Name;
     if (User.IsInRole("Teacher"))
     {
         Layout = "_TeacherLayout";
